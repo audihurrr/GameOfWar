@@ -1,5 +1,9 @@
 # Game Of War Design "notepad"
 
+## PURPOSE
+This application will function similar to a game of war.
+
+
 ## List of components in the game
 * the game itself,
 * two players, 
@@ -14,8 +18,13 @@
 
 ## Classes
 
-### DeckOfCards
-### Card
-### Player
-### Game
+#### DeckOfCards
+* 52 Cards
+#### Card
+* Suite and Rank (value)
+#### Player
+* Deck of cards
+* Collected Pile
+#### Game
+* Two players
 
