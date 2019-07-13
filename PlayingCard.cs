@@ -4,7 +4,7 @@ using System.Text;
 
 namespace GameOfWar
 {
-    class PlayingCard
+    public class PlayingCard
     {
         public enum SUITE
         {
