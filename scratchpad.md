@@ -20,11 +20,21 @@ This application will function similar to a game of war.
 
 #### DeckOfCards
 * 52 Cards
+* Draw a card
+* Add card to deck
+* shuffle
+* is empty,
+
 #### Card
 * Suite and Rank (value)
+
 #### Player
-* Deck of cards
+* ~~deck of cards~~
+* pile to draw from
 * Collected Pile
+
 #### Game
 * Two players
+* deck of cards
+* start and stop play
 
