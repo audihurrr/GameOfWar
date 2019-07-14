@@ -6,13 +6,17 @@ namespace GameOfWar
 {
     public class WarPlayer
     {
-        public DeckOfCards Deck { get; set; }
 
-        public WarPlayer() {
+        private DeckOfCards cardPile = null;
 
-            Deck = new DeckOfCards();
-
+        public WarPlayer()
+        {
+            cardPile = new DeckOfCards(false);
         }
 
+        public void AddCardToDeck(PlayingCard c)
+        {
+            cardPile.AddCard(c);
+        }
     }
 }
