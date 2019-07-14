@@ -8,7 +8,7 @@ namespace GameOfWar
     {
         public enum SUITE
         {
-            DIAMONDS,
+            DIAMONDS = 0,
             SPADES,
             CLUBS,
             HEARTS
@@ -34,5 +34,9 @@ namespace GameOfWar
         public SUITE Suite { get; set; }
         public RANK Rank { get; set; }
 
+        public override String ToString()
+        {
+            return (Rank + " of " + Suite);
+        }
     }
 }
