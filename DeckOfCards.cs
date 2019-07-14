@@ -37,6 +37,11 @@ namespace GameOfWar
             }
         }
 
+        internal bool IsFull()
+        {
+            return (deck.Count == STANDARD_DECK_SIZE);
+        }
+
         public void Shuffle()
         {
             Random rng = new Random();

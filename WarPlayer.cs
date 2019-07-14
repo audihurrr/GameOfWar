@@ -18,5 +18,15 @@ namespace GameOfWar
         {
             cardPile.AddCard(c);
         }
+
+        internal PlayingCard DrawCard()
+        {
+            return cardPile.DealCard();
+        }
+
+        internal bool HasAllCards()
+        {
+            return cardPile.IsFull();
+        }
     }
 }
