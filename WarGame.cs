@@ -5,11 +5,12 @@ namespace GameOfWar
 {
     public class WarGame
     {
+        // Number of cards to deal when players draw matching rank.
+        private const int BurnPileSize = 1;
 
-        private const int BURN_PILE_SIZE = 3;
-
-        WarPlayer player1 = null;
-        WarPlayer player2 = null;
+        // Each game contains two players.
+        private WarPlayer player1 = null;
+        private WarPlayer player2 = null;
 
         public WarGame()
         {
@@ -17,12 +18,13 @@ namespace GameOfWar
             player2 = new WarPlayer();
         }
 
+        // Create a deck of cards, shuffle them and distribute the deck evenly to each player.
         public void DealCards()
         {
             DeckOfCards tmpDeck = new DeckOfCards(true);
             tmpDeck.Shuffle();
 
-            for (int i = 0; i < DeckOfCards.STANDARD_DECK_SIZE; ++i)
+            for (int i = 0; i < DeckOfCards.StandardDeckSize; ++i)
             {
                 if (i % 2 == 0)
                 {
@@ -35,78 +37,104 @@ namespace GameOfWar
             }
         }
 
+        // Each player draws a card and rank is compared. Winner gets the cards.
+        // In case of matching rank, we go to 'war' -- deal card(s) face down, and then draw
+        // another card for comparison, repeat until winner or one of the player's piles is empty.
         public void Battle()
         {
-            Stack<PlayingCard> dealt_cards = new Stack<PlayingCard>();
-            bool battleWon = false;
+            Stack<PlayingCard> dealtCardPile = new Stack<PlayingCard>();
+            bool isBattleWon = false;
 
             do
             {
-                //TODO, need to handle the case where there are no more cards to draw for either player.  program crashes 
-                // Each player draws a card
-                PlayingCard p1_card = player1.DrawCard();
-                PlayingCard p2_card = player2.DrawCard();
+                PlayingCard p1_card = null;
+                PlayingCard p2_card = null;
 
-                Console.Write("p1: " + p1_card.ToString() + ", p2: " + p2_card.ToString());
+                // Check each player's pile size before drawing a card.
+                if (DoPlayersHaveEnoughCards(1))
+                {
+                    p1_card = player1.DrawCard();
+                    p2_card = player2.DrawCard();
 
-                // Compare Rank
+                    Console.Write("{0}  <--->  {1}", p1_card.ToString(), p2_card.ToString());
+
+                }
+                else
+                {
+                    Console.WriteLine("Not enough cards to battle, game is over.");
+                    return;
+                }
+
+                // Compare drawn card rank.
                 int value = p1_card.Rank.CompareTo(p2_card.Rank);
 
-                // Add cards to dealt_list
-                dealt_cards.Push(p1_card);
-                dealt_cards.Push(p2_card);
+                // Add drawn cards to the pile.
+                dealtCardPile.Push(p1_card);
+                dealtCardPile.Push(p2_card);
 
-                // Player1 Rank is less than Player2 Rank
+                // Player 2 Wins -- Player 1 rank is less than player 2 rank.
                 if (value < 0)
                 {
-                    Console.WriteLine("...Player 2 Wins!");
-                    foreach (PlayingCard card in dealt_cards)
+                    Console.WriteLine(" -- Player 2 wins this round");
+
+                    foreach (PlayingCard card in dealtCardPile)
                     {
                         player2.AddCardToDeck(card);
                     }
-                    battleWon = true;
-                }
-                else if (value > 0) // Player 1 Rank is greater than Player2 Rank
-                {
-                    Console.WriteLine("...Player 1 Wins!");
 
-                    foreach (PlayingCard card in dealt_cards)
+                    isBattleWon = true;
+                }
+                // Player 1 Wins -- Player 1 rank is greater than player 2 rank.
+                else if (value > 0)
+                {
+                    Console.WriteLine(" -- Player 1 wins this round");
+
+                    foreach (PlayingCard card in dealtCardPile)
                     {
                         player1.AddCardToDeck(card);
                     }
-                    battleWon = true;
+
+                    isBattleWon = true;
                 }
                 else // Ranks are equal, it is time for war!
                 {
-                    Console.Write("...it's a war! ");
-
-                    for (int i = 0; i < BURN_PILE_SIZE; ++i)
+                    // Check if each player has enough cards for 'war'. 
+                    if (DoPlayersHaveEnoughCards(BurnPileSize))
                     {
-                        dealt_cards.Push(player1.DrawCard());
-                        dealt_cards.Push(player2.DrawCard());
-                    }
+                        Console.WriteLine(" -- Now is the time for war");
 
-                    battleWon = false;
+                        for (int i = 0; i < BurnPileSize; ++i)
+                        {
+                            dealtCardPile.Push(player1.DrawCard());
+                            dealtCardPile.Push(player2.DrawCard());
+                        }
+
+                        // Draw another card face-up to continue the battle.
+                        isBattleWon = false;
+                    }
+                    else
+                    {
+                        Console.WriteLine(" -- Not enough cards for war, game is over");
+                        return;
+                    }
                 }
 
-            } while (!battleWon);
+            } while (!isBattleWon);
+        }
+
+        private bool DoPlayersHaveEnoughCards(int numCards)
+        {
+            return (player1.DeckSize >= numCards && player2.DeckSize >= numCards);
         }
 
         public bool HasWinner()
         {
-            return (player1.HasAllCards() || player2.HasAllCards()); 
+            return (player1.DeckSize == 0) || (player2.DeckSize == 0);
         }
 
         public String NameWinner()
         {
-            String winner = String.Empty;
-
-            if (HasWinner())
-            {
-                if (player1.HasAllCards()) { winner = "Player 1 is the ultimate Warrior!"; }
-                else { winner = "Player 2 is the ultimate Warrior!"; }
-            }
-            return winner;
+            return (player1.DeckSize > player2.DeckSize) ? "Player 1 is the ultimate Warrior!" : "Player 2 is the ultimate Warrior!";
         }
     }
 }
