@@ -4,18 +4,10 @@ using System.Collections.Generic;
 namespace GameOfWar
 {
     public class DeckOfCards
-    { 
-        public const int STANDARD_DECK_SIZE = 52;
+    {
+        public const int StandardDeckSize = 52;
 
         private List<PlayingCard> deck = null;
-
-        public int Count
-        {
-            get
-            {
-                return deck.Count;
-            }
-        }
 
         public DeckOfCards(bool fillDeck)
         {
@@ -26,20 +18,23 @@ namespace GameOfWar
             }
         }
 
+        public int Count
+        {
+            get
+            {
+                return deck.Count;
+            }
+        }
+
         private void InitializeDeck()
         {
             foreach (PlayingCard.SUITE s in Enum.GetValues(typeof(PlayingCard.SUITE)))
             {
                 foreach (PlayingCard.RANK r in Enum.GetValues(typeof(PlayingCard.RANK)))
                 {
-                    deck.Add(new PlayingCard() { Suite = s, Rank = r });      
+                    deck.Add(new PlayingCard() { Suite = s, Rank = r });
                 }
             }
-        }
-
-        internal bool IsFull()
-        {
-            return (deck.Count == STANDARD_DECK_SIZE);
         }
 
         public void Shuffle()
@@ -71,6 +66,11 @@ namespace GameOfWar
                 deck.RemoveAt(0);
             }
             return dealtCard;
+        }
+
+        public bool IsFull()
+        {
+            return (deck.Count == StandardDeckSize);
         }
 
     }

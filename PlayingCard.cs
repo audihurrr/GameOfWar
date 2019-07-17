@@ -39,9 +39,5 @@ namespace GameOfWar
             return (Rank + " of " + Suite);
         }
 
-        internal void CompareTo(PlayingCard p2_card)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
